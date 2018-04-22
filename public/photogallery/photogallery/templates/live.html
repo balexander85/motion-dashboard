@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block head_title %}Motion 4.0{% endblock %}
+{% block content %}
+    <b>Motion 4.0 Running [{{ host_list|length }}] Cameras</b><br>
+    <br>
+    {% for host in host_list %}
+        <a href="{{ host }}"> <img src="{{ host }}" border=0 width=25%></a>
+    {% endfor %}
+{% endblock %}

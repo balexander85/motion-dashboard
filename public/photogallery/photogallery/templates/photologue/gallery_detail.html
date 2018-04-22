@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if gallery %}
+    {% block head_title %}{{ gallery.title }}{% endblock %}
+        <!-- The Selected Gallery Section -->
+        <h2 class="w3-wide w3-center w3-padding-16">{{ gallery.title }}</h2>
+        {% for photo in gallery.photos.all %}
+        <a class="w3-card-4" href="{{ photo.get_absolute_url }}">
+            <img src="{{ photo.get_thumbnail_url }}" class="w3-image w3-margin-bottom w3-hover-shadow" alt="{{ photo.title }}">
+        </a>
+        {% endfor %}
+    {% else %}
+        <div>No galleries were found.</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block head_title %}Photo List{% endblock %}
+{% load i18n %}
+{% block content %}
+	{% if object_list %}
+        {% blocktrans with page_number=page_obj.number total_pages=page_obj.paginator.num_pages %}
+            <h1>page {{ page_number }} of {{ total_pages }}</h1>
+        {% endblocktrans %}
+        {% for photo in object_list %}
+            <a href="{{ photo.get_absolute_url }}">
+                 <img src="{{ photo.get_thumbnail_url }}" class="thumbnail w3-padding" alt="{{ photo.title }}">
+            </a>
+        {% endfor %}
+	{% else %}
+		<div>{% trans "No photos were found" %}.</div>
+	{% endif %}
+{% endblock %}

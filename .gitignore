@@ -1,0 +1,7 @@
+.python-version
+.idea/*
+*.DS_Store
+*.pyc
+settings-*.json
+public/photogallery/db.sqlite3
+public/photogallery/media/photologue/photos/*

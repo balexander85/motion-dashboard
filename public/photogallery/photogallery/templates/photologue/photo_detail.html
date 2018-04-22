@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load photologue_tags i18n %}
+
+{% block head_title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+    <h5>{{ object.title }} ({{ object.date_taken }})</h5>
+    {% if object.caption %}<p>{{ object.caption|safe }}</p>{% endif %}
+    <a href="{{ object.image.url }}">
+        <img src="{{ object.get_display_url }}" class="w3-padding-48" alt="{{ object.title }}">
+    </a>
+{% endblock %}

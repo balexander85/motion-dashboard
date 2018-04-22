@@ -1,0 +1,21 @@
+{% load photologue_tags i18n %}
+
+<footer id="footer-bar" class="w3-blue-grey w3-bar w3-row">
+    {% load i18n %}
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            {% include "components/buttons/previous_page_button.html" %}
+        {% endif %}
+        {% if page_obj.has_next %}
+            {% include "components/buttons/next_page_button.html" %}
+        {% endif %}
+    {% endif %}
+    {% if object.public_galleries %}
+        {% for gallery in object.public_galleries %}
+            {% previous_in_gallery object gallery %}
+            {% next_in_gallery object gallery %}
+        {% endfor %}
+    {% endif %}
+
+    {% include "components/buttons/website_promo_button.html" %}
+</footer>
