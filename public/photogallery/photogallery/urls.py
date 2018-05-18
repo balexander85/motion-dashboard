@@ -24,11 +24,12 @@ from photologue.views import (
     PhotoListView,
     GalleryListView
 )
-from .views import index, live
+from .views import index, live, search
 
 urlpatterns = [
     path('', index, name="index"),
     path('live', live, name="live"),
+    path('search', search, name="search"),
     path('admin/', admin.site.urls),
     path('gallerylist/', GalleryListView.as_view(), name='gallery-list'),
     path('photologue/', include('photologue.urls', namespace='photologue')),

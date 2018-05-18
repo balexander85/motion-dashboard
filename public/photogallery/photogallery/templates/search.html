@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block head_title %}SEARCH{% endblock %}
+{% block content %}
+    <h1>SEARCH</h1>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin:0 -16px 8px -16px">
+                {{ form.as_p }}
+            </div>
+            <button id="submit-contact-form" class="w3-button w3-light-grey w3-section">SEND</button>
+        </form>
+    </div>
+
+    {% if searchrange %}
+        <b>{{ searchrange }}</b>
+    {% endif %}
+    {% if photos %}
+        <div>
+            {% for photo in photos %}
+                <a href="{{ photo.get_absolute_url }}">
+                     <img src="{{ photo.get_thumbnail_url }}" class="thumbnail w3-padding" alt="{{ photo.title }}">
+                </a>
+            {% endfor %}
+        </div>
+	{% endif %}
+{% endblock %}
