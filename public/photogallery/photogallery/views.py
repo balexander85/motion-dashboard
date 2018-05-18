@@ -36,28 +36,24 @@ def search(request):
         if form.is_valid():
             gallery = Gallery.objects.get(title='upload test')
             post_response = request.POST
-            from_month = post_response.get("from_date_month", "")
-            from_day = post_response.get("from_date_day", "")
-            from_year = post_response.get("from_date_year", "")
+            from_date = post_response.get("from_date", "")
             from_time = request.POST.get("from_time")
-            from_date = datetime.strptime(
-                f"{from_year}-{from_month}-{from_day} {from_time}",
+            from_datetime = datetime.strptime(
+                f"{from_date} {from_time}",
                 "%Y-%m-%d %H:%M:%S"
             )
 
-            end_month = post_response.get("end_date_month", "")
-            end_day = post_response.get("end_date_day", "")
-            end_year = post_response.get("end_date_year", "")
+            end_date = post_response.get("end_date", "")
             end_time = request.POST.get("end_time")
-            end_date = datetime.strptime(
-                f"{end_year}-{end_month}-{end_day} {end_time}",
+            end_datetime = datetime.strptime(
+                f"{end_date} {end_time}",
                 "%Y-%m-%d %H:%M:%S"
             )
             utc_start_date = pytz.timezone("UTC").localize(
-                from_date
+                from_datetime
             )
             utc_end_date = pytz.timezone("UTC").localize(
-                end_date
+                end_datetime
             )
             filtered_photos = gallery.photos.filter(
                 date_taken__gte=utc_start_date, date_taken__lte=utc_end_date

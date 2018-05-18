@@ -1,3 +1,4 @@
+from datetime import date, time
 from django import forms
 from photologue.models import Gallery
 
@@ -8,9 +9,13 @@ class SearchForm(forms.ModelForm):
         model = Gallery
         fields = ["from_date", "from_time", "end_date", "end_time"]
 
-    from_date = forms.DateTimeField(widget=forms.SelectDateWidget())
+    from_date = forms.DateTimeField(
+        initial=f"{date.today()}", widget=forms.TextInput()
+    )
     from_time = forms.TimeField(initial="00:00:00", widget=forms.TextInput())
-    end_date = forms.DateTimeField(widget=forms.SelectDateWidget())
+    end_date = forms.DateTimeField(
+        initial=f"{date.today()}", widget=forms.TextInput()
+    )
     end_time = forms.TimeField(initial="00:00:00", widget=forms.TextInput())
 
     def __init__(self, *args, **kwargs):
