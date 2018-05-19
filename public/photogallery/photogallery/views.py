@@ -35,18 +35,12 @@ def search(request):
 
         if form.is_valid():
             gallery = Gallery.objects.get(title='upload test')
-            post_response = request.POST
-            from_date = post_response.get("from_date", "")
-            from_time = request.POST.get("from_time")
             from_datetime = datetime.strptime(
-                f"{from_date} {from_time}",
+                f"{request.POST.get('from_datetime')}",
                 "%Y-%m-%d %H:%M:%S"
             )
-
-            end_date = post_response.get("end_date", "")
-            end_time = request.POST.get("end_time")
             end_datetime = datetime.strptime(
-                f"{end_date} {end_time}",
+                f"{request.POST.get('end_datetime')}",
                 "%Y-%m-%d %H:%M:%S"
             )
             utc_start_date = pytz.timezone("UTC").localize(
