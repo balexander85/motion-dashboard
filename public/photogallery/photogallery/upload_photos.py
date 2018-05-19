@@ -6,12 +6,21 @@ from datetime import datetime
 import pytz
 import os
 from typing import List
+import logging
+import sys
+import shutil
 
 from django.template.defaultfilters import slugify
 from PIL import Image
 import PIL.ExifTags
 from photologue.models import Gallery, Photo
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)7s: %(message)s",
+    stream=sys.stdout,
+)
+LOG = logging.getLogger("")
 
 top_dir = "public/photogallery/media/uploaded_photos"
 
@@ -21,10 +30,10 @@ def gather_photos(photos_path: str) -> List:
         With given path return a list of dictionaries
         that contains the paths and a list of photos
     """
-    return [
+    return (
         os.path.join(photos_path, photo)
         for photo in os.listdir(photos_path) if photo.endswith(".jpg")
-    ]
+    )
 
 
 def get_photo_date(photo_path) -> datetime:
@@ -36,10 +45,9 @@ def get_photo_date(photo_path) -> datetime:
         }
         date_time = exif.get("DateTime")
         # time_zone = exif.get("TimeZoneOffset")
-        date_taken = pytz.timezone("US/Central").localize(
+        return pytz.timezone("US/Central").localize(
             datetime.strptime(date_time, "%Y:%m:%d %H:%M:%S")
         )
-        return date_taken
 
 
 def add_photo_to_gallery(photo_obj: Photo, gallery_name: str):
@@ -61,7 +69,8 @@ def upload_photo(photo_path: str, gallery_name: str=None):
     )
     photologue_path = f"photologue/photos/{photo_file_name}"
     # Move photo to photologue directory
-    os.rename(photo_path, new_photo_path)
+    shutil.copy(photo_path, new_photo_path)
+    #os.rename(photo_path, new_photo_path)
     photo_model = Photo(
         image=photologue_path, date_taken=photo_date, title=photo_title,
         slug=slugify(photo_title), caption='', date_added=upload_date,
@@ -74,5 +83,8 @@ def upload_photo(photo_path: str, gallery_name: str=None):
 
 if __name__ == "__main__":
     photos = gather_photos(top_dir)
+    LOG.info("Created photos generator, beginning for loop")
     for photo in photos:
+        LOG.info(f"{photo} is being uploaded")
         upload_photo(photo_path=photo, gallery_name='upload-test')
+
