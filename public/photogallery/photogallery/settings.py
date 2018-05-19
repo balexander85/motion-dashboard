@@ -58,6 +58,7 @@ DEBUG = protected_settings['DEBUG']
 
 ALLOWED_HOSTS = [protected_settings['ALLOWED_HOSTS']]
 MOTION_HUB_HOST_NAME = protected_settings['MOTION_HUB_HOST_NAME']
+MOTION_HUB_PORT_RANGE = protected_settings['MOTION_HUB_PORT_RANGE']
 
 # Application definition
 

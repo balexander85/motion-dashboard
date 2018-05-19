@@ -9,7 +9,7 @@ from .search_form import SearchForm
 
 camera_host_list = [
     f"http://{settings.MOTION_HUB_HOST_NAME}.local:{i}" for i in range(
-        8081, 8084
+        *settings.MOTION_HUB_PORT_RANGE
     )
 ]
 
