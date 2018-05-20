@@ -5,11 +5,12 @@
 from datetime import datetime
 import pytz
 import os
-from typing import List
+from typing import Generator
 import logging
 import sys
-import shutil
+# import shutil
 
+from django.conf import settings
 from django.template.defaultfilters import slugify
 from PIL import Image
 import PIL.ExifTags
@@ -22,18 +23,19 @@ logging.basicConfig(
 )
 LOG = logging.getLogger("")
 
-top_dir = "public/photogallery/media/uploaded_photos"
 
-
-def gather_photos(photos_path: str) -> List:
+def gather_photos(photos_path: str) -> Generator:
     """
         With given path return a list of dictionaries
         that contains the paths and a list of photos
     """
-    return (
-        os.path.join(photos_path, photo)
-        for photo in os.listdir(photos_path) if photo.endswith(".jpg")
-    )
+    if os.path.isdir(photos_path):
+        return (
+            os.path.join(photos_path, photo)
+            for photo in os.listdir(photos_path) if photo.endswith(".jpg")
+        )
+    else:
+        yield
 
 
 def get_photo_date(photo_path) -> datetime:
@@ -64,15 +66,15 @@ def upload_photo(photo_path: str, gallery_name: str=None):
     upload_date = datetime.now(pytz.timezone("US/Central"))
     photo_file_name = photo_path.split("/")[-1]
     photo_title = photo_file_name.replace(".jpg", "")
-    new_photo_path = (
-        f"public/photogallery/media/photologue/photos/{photo_file_name}"
-    )
-    photologue_path = f"photologue/photos/{photo_file_name}"
+    # new_photo_path = (
+    #     f"public/photogallery/media/photologue/photos/{photo_file_name}"
+    # )
+    # photologue_path = f"photologue/photos/{photo_file_name}"
     # Move photo to photologue directory
-    shutil.copy(photo_path, new_photo_path)
-    #os.rename(photo_path, new_photo_path)
+    # shutil.copy(photo_path, new_photo_path)
+    # os.rename(photo_path, new_photo_path)
     photo_model = Photo(
-        image=photologue_path, date_taken=photo_date, title=photo_title,
+        image=photo_path, date_taken=photo_date, title=photo_title,
         slug=slugify(photo_title), caption='', date_added=upload_date,
         is_public=True
     )
@@ -82,7 +84,7 @@ def upload_photo(photo_path: str, gallery_name: str=None):
 
 
 if __name__ == "__main__":
-    photos = gather_photos(top_dir)
+    photos = gather_photos(settings.MOTION_PHOTO_DIRECTORY)
     LOG.info("Created photos generator, beginning for loop")
     for photo in photos:
         LOG.info(f"{photo} is being uploaded")
