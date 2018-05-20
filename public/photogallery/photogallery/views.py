@@ -34,7 +34,8 @@ def search(request):
         form = form_class(data=request.POST)
 
         if form.is_valid():
-            gallery = Gallery.objects.get(title='upload test')
+            gallery_name = request.POST.get('gallery_selection')
+            gallery = Gallery.objects.get(title=gallery_name)
             from_datetime = datetime.strptime(
                 f"{request.POST.get('from_datetime')}",
                 "%Y-%m-%d %H:%M:%S"
