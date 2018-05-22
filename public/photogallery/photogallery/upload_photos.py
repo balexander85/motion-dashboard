@@ -30,16 +30,14 @@ def gather_photos(photos_path: str) -> Generator:
         that contains the paths and a list of photos
     """
     if os.path.isdir(photos_path):
-        return (
-            os.path.join(photos_path, photo)
-            for photo in os.listdir(photos_path) if photo.endswith(".jpg")
-        )
-    else:
-        yield
+        for photo in os.listdir(photos_path):
+            if photo.endswith(".jpg"):
+                yield os.path.join(photos_path, photo)
 
 
 def get_photo_date(photo_path) -> datetime:
     """Get EXIF data from image."""
+    LOG.info(f"Getting photo's ({photo_path}) date info.")
     with Image.open(photo_path) as img:
         exif = {
             PIL.ExifTags.TAGS[k]: v for k, v in img._getexif().items()
@@ -78,8 +76,10 @@ def upload_photo(photo_path: str, gallery_name: str=None):
         slug=slugify(photo_title), caption='', date_added=upload_date,
         is_public=True
     )
+    LOG.info(f"Saving photo {photo_title} to {photo_path}")
     photo_model.save()
     if gallery_name:
+        LOG.info(f"Saving photo {photo_title} to Gallery: {gallery_name}")
         add_photo_to_gallery(photo_obj=photo_model, gallery_name=gallery_name)
 
 
@@ -88,5 +88,5 @@ if __name__ == "__main__":
     LOG.info("Created photos generator, beginning for loop")
     for photo in photos:
         LOG.info(f"{photo} is being uploaded")
-        upload_photo(photo_path=photo, gallery_name='upload-test')
+        upload_photo(photo_path=photo, gallery_name='test-upload')
 
