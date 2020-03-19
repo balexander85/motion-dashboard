@@ -1,4 +1,4 @@
-Django==2.0.4
+Django==2.2.10
 django-photologue==3.8.1
 Pillow==5.0.0
 pytz==2018.4
